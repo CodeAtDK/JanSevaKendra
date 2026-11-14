@@ -4,6 +4,7 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -19,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.dhruva.jansevakendra.designsystem.JskColors
-import dev.dhruva.jansevakendra.designsystem.JskEmblem
+import dev.dhruva.jansevakendra.designsystem.JskLogo
 import dev.dhruva.jansevakendra.navigation.LocalNavigator
 import kotlinx.coroutines.flow.collectLatest
 
@@ -113,26 +114,26 @@ fun SplashScreen(
                 .offset(y = contentSlide.value.dp)
                 .alpha(contentAlpha.value)
         ) {
-            // Emblem with pulse scale
+            // Official Logo with pulse scale
             Box(
                 modifier = Modifier
                     .scale(scalePulse)
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                JskEmblem(
-                    size = 100.dp,
-                    tint = JskColors.SaffronPrimary
+                JskLogo(
+                    size = 120.dp,
+                    shape = RoundedCornerShape(26.dp)
                 )
             }
 
             Spacer(Modifier.height(20.dp))
 
-            // Hindi branding
+            // Hindi branding from official logo
             Text(
-                text = "जन सेवा केंद्र",
+                text = "उद्यम जन सेवा केंद्र",
                 style = MaterialTheme.typography.displayMedium.copy(
-                    fontSize = 32.sp,
+                    fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     color = JskColors.SaffronPrimary
                 )
@@ -140,22 +141,29 @@ fun SplashScreen(
 
             Spacer(Modifier.height(6.dp))
 
-            // English branding
+            // English branding from official logo
             Text(
-                text = "JAN SEVA KENDRA",
+                text = "UDYAM JAN SEWA KENDRA",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    letterSpacing = 2.5.sp,
+                    letterSpacing = 2.sp,
                     color = MaterialTheme.colorScheme.secondary
                 )
             )
 
             Spacer(Modifier.height(10.dp))
 
-            // Civic Tagline
+            // Official Motto from logo
+            Text(
+                text = "जन कल्याण हमारी पहचान",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.SemiBold,
+                    color = JskColors.ForestGreen
+                )
+            )
             Text(
                 text = "Government to Citizen Digital Portal",
-                style = MaterialTheme.typography.bodyMedium.copy(
+                style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )

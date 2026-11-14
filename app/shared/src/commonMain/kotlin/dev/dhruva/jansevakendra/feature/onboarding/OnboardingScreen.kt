@@ -111,7 +111,7 @@ fun OnboardingScreen() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                JskEmblem(size = 36.dp, tint = JskColors.SaffronPrimary)
+                JskLogo(size = 40.dp)
 
                 TextButton(
                     onClick = { completeOnboarding() }
@@ -146,23 +146,22 @@ fun OnboardingScreen() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(260.dp)
-                            .shadow(12.dp, RoundedCornerShape(28.dp))
+                            .shadow(4.dp, RoundedCornerShape(28.dp))
                             .clip(RoundedCornerShape(28.dp))
                             .background(
                                 Brush.radialGradient(
                                     colors = listOf(
-                                        current.secondaryColor.copy(alpha = 0.8f),
-                                        current.accentColor.copy(alpha = 0.15f),
+                                        current.secondaryColor,
                                         MaterialTheme.colorScheme.surface
                                     )
                                 )
                             ),
                         contentAlignment = Alignment.Center
                     ) {
-                        // Central decorative Chakra
-                        JskEmblem(
-                            size = 140.dp,
-                            tint = current.accentColor.copy(alpha = 0.35f)
+                        // Central decorative Logo
+                        JskLogo(
+                            size = 100.dp,
+                            shape = RoundedCornerShape(22.dp)
                         )
 
                         // Floating Badge

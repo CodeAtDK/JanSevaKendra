@@ -66,9 +66,9 @@ fun AuthScreen(
         ) {
             Spacer(Modifier.height(32.dp))
 
-            // Header Emblem & Civic Title
+            // Official Logo & Civic Title
             Row(verticalAlignment = Alignment.CenterVertically) {
-                JskEmblem(size = 46.dp, tint = JskColors.SaffronPrimary)
+                JskLogo(size = 48.dp)
                 Spacer(Modifier.width(14.dp))
                 Column {
                     Text(

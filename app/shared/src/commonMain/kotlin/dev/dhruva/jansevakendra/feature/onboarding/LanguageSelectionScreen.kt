@@ -63,9 +63,9 @@ fun LanguageSelectionScreen(
         ) {
             Spacer(Modifier.height(32.dp))
 
-            // Emblem Accent Header
+            // Official Logo & Accent Header
             Row(verticalAlignment = Alignment.CenterVertically) {
-                JskEmblem(size = 42.dp, tint = JskColors.SaffronPrimary)
+                JskLogo(size = 48.dp)
                 Spacer(Modifier.width(14.dp))
                 Column {
                     Text(
@@ -140,20 +140,21 @@ private fun StaggeredLanguageCard(
         isVisible = true
     }
 
-    val cardScale by animateFloatAsState(
-        targetValue = if (isSelected) 1.03f else 1f,
-        animationSpec = MotionTokens.BouncySpring,
-        label = "LanguageCardScale"
-    )
-
     val borderColor by animateColorAsState(
         targetValue = if (isSelected) JskColors.SaffronPrimary else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
         animationSpec = tween(250),
         label = "BorderColor"
     )
 
+    // Use completely OPAQUE solid colors to avoid any RenderNode shadow bleed-through glitches
+    val isDark = MaterialTheme.colorScheme.background == JskColors.BackgroundDark
     val backgroundColor by animateColorAsState(
-        targetValue = if (isSelected) JskColors.SaffronContainer.copy(alpha = 0.25f) else MaterialTheme.colorScheme.surface,
+        targetValue = when {
+            isSelected && isDark -> Color(0xFF281812)
+            isSelected -> Color(0xFFFFF7F2)
+            isDark -> MaterialTheme.colorScheme.surface
+            else -> Color.White
+        },
         animationSpec = tween(250),
         label = "BgColor"
     )
@@ -169,11 +170,13 @@ private fun StaggeredLanguageCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(120.dp)
-                .scale(cardScale)
-                .shadow(if (isSelected) 8.dp else 1.dp, RoundedCornerShape(20.dp))
                 .clip(RoundedCornerShape(20.dp))
                 .background(backgroundColor)
-                .border(if (isSelected) 2.dp else 1.dp, borderColor, RoundedCornerShape(20.dp))
+                .border(
+                    width = if (isSelected) 2.dp else 1.dp,
+                    color = borderColor,
+                    shape = RoundedCornerShape(20.dp)
+                )
                 .bouncyClickable(onClick = onClick)
                 .padding(16.dp)
         ) {
@@ -194,24 +197,25 @@ private fun StaggeredLanguageCard(
                         )
                     )
 
-                    // Selection radio badge with pop scale
+                    // Crisp checkmark badge for selected state
                     Box(
                         modifier = Modifier
                             .size(24.dp)
                             .clip(CircleShape)
-                            .background(
-                                if (isSelected) JskColors.SaffronPrimary
-                                else MaterialTheme.colorScheme.surfaceVariant
-                            )
-                            .border(1.5.dp, borderColor, CircleShape),
+                            .background(if (isSelected) JskColors.SaffronPrimary else Color.Transparent)
+                            .border(
+                                width = if (isSelected) 0.dp else 1.5.dp,
+                                color = if (isSelected) Color.Transparent else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
+                                shape = CircleShape
+                            ),
                         contentAlignment = Alignment.Center
                     ) {
                         if (isSelected) {
-                            Box(
-                                modifier = Modifier
-                                    .size(10.dp)
-                                    .clip(CircleShape)
-                                    .background(Color.White)
+                            Text(
+                                text = "✓",
+                                color = Color.White,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }

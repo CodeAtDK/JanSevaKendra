@@ -132,7 +132,7 @@ private fun HomeHeaderSection(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            JskEmblem(size = 44.dp, tint = JskColors.SaffronPrimary)
+            JskLogo(size = 46.dp)
             Spacer(Modifier.width(12.dp))
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -346,17 +346,10 @@ private fun ActiveApplicationTrackerCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 10.dp)
-            .shadow(6.dp, RoundedCornerShape(22.dp))
+            .shadow(2.dp, RoundedCornerShape(22.dp))
             .clip(RoundedCornerShape(22.dp))
-            .background(
-                Brush.horizontalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.surface,
-                        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                    )
-                )
-            )
-            .border(1.2.dp, JskColors.SaffronLight.copy(alpha = 0.5f), RoundedCornerShape(22.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.6f), RoundedCornerShape(22.dp))
             .bouncyClickable(onClick = onClick)
             .padding(18.dp)
     ) {
