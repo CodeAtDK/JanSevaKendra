@@ -17,7 +17,7 @@ enum class AppLanguage(val code: String, val displayName: String, val nativeName
 }
 
 /**
- * Citizen Service Category (e.g. Aadhaar, Certificates, Pension)
+ * Citizen Service Category (e.g. 28 Official Departments of Jan Seva Kendra)
  */
 data class ServiceCategory(
     val id: String,
@@ -25,7 +25,10 @@ data class ServiceCategory(
     val nameHindi: String,
     val iconKey: String,
     val serviceCount: Int,
-    val highlightColorHex: Long = 0xFF1B3B5A
+    val highlightColorHex: Long = 0xFF1B3B5A,
+    val departmentNumber: Int = 1,
+    val departmentCode: String = "",
+    val description: String = ""
 )
 
 /**
@@ -42,7 +45,10 @@ data class CitizenService(
     val requiredDocuments: List<String>,
     val isPopular: Boolean = false,
     val rating: Float = 4.8f,
-    val totalProcessedCount: Int = 12500
+    val totalProcessedCount: Int = 12500,
+    val formNumber: String? = null,
+    val subCategory: String? = null,
+    val departmentName: String? = null
 )
 
 /**

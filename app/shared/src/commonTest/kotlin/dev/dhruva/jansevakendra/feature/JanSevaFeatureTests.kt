@@ -110,6 +110,111 @@ class JanSevaFeatureTests {
     }
 
     @Test
+    fun `test HomeViewModel loads all 28 citizen departments`() = runTest(testDispatcher) {
+        val serviceRepo = FakeCitizenServiceRepository()
+        val appRepo = FakeApplicationRepository()
+        val schemeRepo = FakeWelfareSchemeRepository()
+        val sessionRepo = InMemoryUserSessionRepository()
+
+        val viewModel = HomeViewModel(
+            getCategoriesUseCase = GetCategoriesUseCase(serviceRepo),
+            getCitizenServicesUseCase = GetCitizenServicesUseCase(serviceRepo),
+            searchCitizenServicesUseCase = SearchCitizenServicesUseCase(serviceRepo),
+            getActiveApplicationsUseCase = GetActiveApplicationsUseCase(appRepo),
+            getFeaturedSchemesUseCase = GetFeaturedSchemesUseCase(schemeRepo),
+            manageSessionUseCase = ManageSessionUseCase(sessionRepo)
+        )
+
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(28, state.categories.size, "Must have exactly 28 government departments")
+        assertEquals(1, state.categories.first().departmentNumber)
+        assertEquals("cat_transport", state.categories.first().id)
+        assertEquals(28, state.categories.last().departmentNumber)
+        assertEquals("cat_banking_dbt", state.categories.last().id)
+    }
+
+    @Test
+    fun `test Transport department contains Learner Licence Form 3 from uploaded document`() = runTest(testDispatcher) {
+        val serviceRepo = FakeCitizenServiceRepository()
+        val appRepo = FakeApplicationRepository()
+        val schemeRepo = FakeWelfareSchemeRepository()
+        val sessionRepo = InMemoryUserSessionRepository()
+
+        val viewModel = HomeViewModel(
+            getCategoriesUseCase = GetCategoriesUseCase(serviceRepo),
+            getCitizenServicesUseCase = GetCitizenServicesUseCase(serviceRepo),
+            searchCitizenServicesUseCase = SearchCitizenServicesUseCase(serviceRepo),
+            getActiveApplicationsUseCase = GetActiveApplicationsUseCase(appRepo),
+            getFeaturedSchemesUseCase = GetFeaturedSchemesUseCase(schemeRepo),
+            manageSessionUseCase = ManageSessionUseCase(sessionRepo)
+        )
+
+        advanceUntilIdle()
+
+        // Filter by Transport category
+        viewModel.onCategorySelected("cat_transport")
+        val transportServices = viewModel.uiState.value.filteredServices
+        assertTrue(transportServices.isNotEmpty())
+        val learnerLicence = transportServices.firstOrNull { it.id == "srv_dl_learner" }
+        assertNotNull(learnerLicence)
+        assertEquals("Form 3", learnerLicence.formNumber)
+        assertTrue(learnerLicence.title.contains("Learner's Driving Licence"))
+
+        // Search for application number 5104819326 from uploaded PDF
+        viewModel.onApplicationSearchChanged("5104819326")
+        val matchingApps = viewModel.uiState.value.filteredApplications
+        assertEquals(1, matchingApps.size)
+        assertEquals("5104819326", matchingApps.first().applicationNumber)
+        assertTrue(matchingApps.first().applicantName.contains("Dhruva"))
+    }
+
+    @Test
+    fun `test HomeViewModel 5-tab navigation and direct category exploration`() = runTest(testDispatcher) {
+        val serviceRepo = FakeCitizenServiceRepository()
+        val appRepo = FakeApplicationRepository()
+        val schemeRepo = FakeWelfareSchemeRepository()
+        val sessionRepo = InMemoryUserSessionRepository()
+
+        val viewModel = HomeViewModel(
+            getCategoriesUseCase = GetCategoriesUseCase(serviceRepo),
+            getCitizenServicesUseCase = GetCitizenServicesUseCase(serviceRepo),
+            searchCitizenServicesUseCase = SearchCitizenServicesUseCase(serviceRepo),
+            getActiveApplicationsUseCase = GetActiveApplicationsUseCase(appRepo),
+            getFeaturedSchemesUseCase = GetFeaturedSchemesUseCase(schemeRepo),
+            manageSessionUseCase = ManageSessionUseCase(sessionRepo)
+        )
+
+        advanceUntilIdle()
+
+        // Initial tab is HOME
+        assertEquals(HomeTab.HOME, viewModel.uiState.value.selectedTab)
+
+        // Switch to SERVICES
+        viewModel.onTabSelected(HomeTab.SERVICES)
+        assertEquals(HomeTab.SERVICES, viewModel.uiState.value.selectedTab)
+
+        // Open specific department directly
+        viewModel.openServicesWithCategory("cat_revenue")
+        assertEquals(HomeTab.SERVICES, viewModel.uiState.value.selectedTab)
+        assertEquals("cat_revenue", viewModel.uiState.value.selectedCategoryId)
+        assertEquals("cat_revenue", viewModel.uiState.value.expandedCategoryId)
+
+        // Switch to APPLICATIONS
+        viewModel.onTabSelected(HomeTab.APPLICATIONS)
+        assertEquals(HomeTab.APPLICATIONS, viewModel.uiState.value.selectedTab)
+
+        // Switch to SCHEMES
+        viewModel.onTabSelected(HomeTab.SCHEMES)
+        assertEquals(HomeTab.SCHEMES, viewModel.uiState.value.selectedTab)
+
+        // Switch to PROFILE
+        viewModel.onTabSelected(HomeTab.PROFILE)
+        assertEquals(HomeTab.PROFILE, viewModel.uiState.value.selectedTab)
+    }
+
+    @Test
     fun `test AuthViewModel valid mobile requests OTP and sends event`() = runTest(testDispatcher) {
         val authRepo = FakeAuthRepository()
         val sessionRepo = InMemoryUserSessionRepository()

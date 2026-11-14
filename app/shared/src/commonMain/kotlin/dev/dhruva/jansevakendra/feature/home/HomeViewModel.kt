@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 enum class HomeTab(val titleHindi: String, val titleEnglish: String, val iconKey: String) {
+    HOME("होम", "Home", "home"),
     SERVICES("सेवाएं", "Services", "grid"),
     APPLICATIONS("आवेदन", "Tracking", "track"),
     SCHEMES("योजनाएं", "Schemes", "award"),
@@ -19,14 +20,19 @@ enum class HomeTab(val titleHindi: String, val titleEnglish: String, val iconKey
 data class HomeUiState(
     val profile: CitizenProfile? = null,
     val selectedLanguage: AppLanguage = AppLanguage.HINDI,
-    val selectedTab: HomeTab = HomeTab.SERVICES,
+    val selectedTab: HomeTab = HomeTab.HOME,
     val categories: List<ServiceCategory> = emptyList(),
     val selectedCategoryId: String? = null,
+    val expandedCategoryId: String? = null,
     val allServices: List<CitizenService> = emptyList(),
     val filteredServices: List<CitizenService> = emptyList(),
     val activeApplications: List<ApplicationStatus> = emptyList(),
+    val filteredApplications: List<ApplicationStatus> = emptyList(),
     val featuredSchemes: List<WelfareScheme> = emptyList(),
     val searchQuery: String = "",
+    val applicationSearchQuery: String = "",
+    val selectedServiceForApplication: CitizenService? = null,
+    val submittedApplicationId: String? = null,
     val isLoading: Boolean = true,
     val isRefreshing: Boolean = false,
     val errorMessage: String? = null
@@ -71,7 +77,12 @@ class HomeViewModel(
         }
         viewModelScope.launch {
             getActiveApplicationsUseCase.observe().collect { apps ->
-                _uiState.update { it.copy(activeApplications = apps) }
+                _uiState.update { state ->
+                    state.copy(
+                        activeApplications = apps,
+                        filteredApplications = filterApplications(apps, state.applicationSearchQuery)
+                    )
+                }
             }
         }
     }
@@ -91,17 +102,21 @@ class HomeViewModel(
             val appsRes = applicationsDeferred.await()
             val schemesRes = schemesDeferred.await()
 
+            val categories = categoriesRes.getOrDefault(emptyList())
             val services = servicesRes.getOrDefault(emptyList())
+            val apps = appsRes.getOrDefault(emptyList())
+            val schemes = schemesRes.getOrDefault(emptyList())
 
             _uiState.update { state ->
                 state.copy(
                     isLoading = false,
                     isRefreshing = false,
-                    categories = categoriesRes.getOrDefault(emptyList()),
+                    categories = categories,
                     allServices = services,
                     filteredServices = filterServices(services, state.selectedCategoryId, state.searchQuery),
-                    activeApplications = appsRes.getOrDefault(emptyList()),
-                    featuredSchemes = schemesRes.getOrDefault(emptyList())
+                    activeApplications = apps,
+                    filteredApplications = filterApplications(apps, state.applicationSearchQuery),
+                    featuredSchemes = schemes
                 )
             }
         }
@@ -116,6 +131,15 @@ class HomeViewModel(
         }
     }
 
+    fun onApplicationSearchChanged(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                applicationSearchQuery = query,
+                filteredApplications = filterApplications(state.activeApplications, query)
+            )
+        }
+    }
+
     fun onCategorySelected(categoryId: String?) {
         _uiState.update { state ->
             val newCat = if (state.selectedCategoryId == categoryId) null else categoryId
@@ -126,8 +150,27 @@ class HomeViewModel(
         }
     }
 
+    fun toggleCategoryExpanded(categoryId: String) {
+        _uiState.update { state ->
+            state.copy(
+                expandedCategoryId = if (state.expandedCategoryId == categoryId) null else categoryId
+            )
+        }
+    }
+
     fun onTabSelected(tab: HomeTab) {
         _uiState.update { it.copy(selectedTab = tab) }
+    }
+
+    fun openServicesWithCategory(categoryId: String?) {
+        _uiState.update { state ->
+            state.copy(
+                selectedTab = HomeTab.SERVICES,
+                selectedCategoryId = categoryId,
+                expandedCategoryId = categoryId,
+                filteredServices = filterServices(state.allServices, categoryId, state.searchQuery)
+            )
+        }
     }
 
     fun onRefresh() {
@@ -136,8 +179,19 @@ class HomeViewModel(
     }
 
     fun onServiceClicked(service: CitizenService) {
+        _uiState.update { it.copy(selectedServiceForApplication = service) }
+    }
+
+    fun onDismissServiceDialog() {
+        _uiState.update { it.copy(selectedServiceForApplication = null, submittedApplicationId = null) }
+    }
+
+    fun onConfirmApplicationSubmission(service: CitizenService) {
         viewModelScope.launch {
-            _events.emit(HomeNavigationEvent.NavigateToServiceDetail(service))
+            val randomNum = (1000000000L..9999999999L).random()
+            val newAppId = "JSK-2026-$randomNum"
+            _uiState.update { it.copy(submittedApplicationId = newAppId) }
+            _events.emit(HomeNavigationEvent.ShowToast("आवेदन सफलतापूर्वक दर्ज किया गया! Application No: $newAppId"))
         }
     }
 
@@ -161,9 +215,24 @@ class HomeViewModel(
             result = result.filter {
                 it.title.lowercase().contains(cleanQuery) ||
                 it.titleHindi.contains(cleanQuery) ||
-                it.description.lowercase().contains(cleanQuery)
+                it.description.lowercase().contains(cleanQuery) ||
+                (it.departmentName?.lowercase()?.contains(cleanQuery) == true) ||
+                (it.formNumber?.lowercase()?.contains(cleanQuery) == true)
             }
         }
         return result
+    }
+
+    private fun filterApplications(
+        apps: List<ApplicationStatus>,
+        query: String
+    ): List<ApplicationStatus> {
+        val clean = query.trim().lowercase()
+        if (clean.isEmpty()) return apps
+        return apps.filter {
+            it.applicationNumber.lowercase().contains(clean) ||
+            it.serviceTitle.lowercase().contains(clean) ||
+            it.applicantName.lowercase().contains(clean)
+        }
     }
 }
