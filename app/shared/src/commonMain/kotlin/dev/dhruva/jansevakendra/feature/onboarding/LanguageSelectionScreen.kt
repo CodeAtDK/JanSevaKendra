@@ -69,15 +69,15 @@ fun LanguageSelectionScreen(
                 Spacer(Modifier.width(14.dp))
                 Column {
                     Text(
-                        text = "अपनी भाषा चुनें",
+                        text = "Choose Your Language",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = JskColors.SaffronPrimary
                         )
                     )
                     Text(
-                        text = "Choose Your Language",
-                        style = MaterialTheme.typography.titleMedium.copy(
+                        text = "Select your preferred application language",
+                        style = MaterialTheme.typography.titleSmall.copy(
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.secondary
                         )
@@ -117,7 +117,7 @@ fun LanguageSelectionScreen(
 
             // Action Button
             JskPrimaryButton(
-                text = "${uiState.selectedLanguage.greeting} • Continue (आगे बढ़ें)",
+                text = "Continue",
                 onClick = viewModel::onConfirm,
                 isLoading = uiState.isSaving,
                 modifier = Modifier.padding(bottom = 24.dp)

@@ -4,15 +4,15 @@ package dev.dhruva.jansevakendra.core.model
  * Supported app languages for Jan Seva Kendra
  */
 enum class AppLanguage(val code: String, val displayName: String, val nativeName: String, val greeting: String) {
-    HINDI("hi", "Hindi", "हिंदी", "नमस्ते"),
     ENGLISH("en", "English", "English", "Welcome"),
-    MARATHI("mr", "Marathi", "मराठी", "नमस्कार"),
-    GUJARATI("gu", "Gujarati", "ગુજરાતી", "નમસ્તે"),
-    BENGALI("bn", "Bengali", "বাংলা", "নমস্কার"),
-    TELUGU("te", "Telugu", "తెలుగు", "నమస్కారం");
+    HINDI("hi", "Hindi", "हिंदी", "Namaste"),
+    MARATHI("mr", "Marathi", "मराठी", "Namaskar"),
+    GUJARATI("gu", "Gujarati", "ગુજરાતી", "Namaste"),
+    BENGALI("bn", "Bengali", "বাংলা", "Namaskar"),
+    TELUGU("te", "Telugu", "తెలుగు", "Namaskaram");
 
     companion object {
-        fun fromCode(code: String): AppLanguage = entries.firstOrNull { it.code == code } ?: HINDI
+        fun fromCode(code: String): AppLanguage = entries.firstOrNull { it.code == code } ?: ENGLISH
     }
 }
 
@@ -98,9 +98,9 @@ data class CitizenProfile(
     val name: String,
     val mobileNumber: String,
     val email: String? = null,
-    val language: AppLanguage = AppLanguage.HINDI,
-    val district: String = "Lucknow",
-    val state: String = "Uttar Pradesh",
+    val language: AppLanguage = AppLanguage.ENGLISH,
+    val district: String = "Beed",
+    val state: String = "Maharashtra",
     val isVerified: Boolean = true,
-    val activeApplicationsCount: Int = 2
+    val activeApplicationsCount: Int = 3
 )

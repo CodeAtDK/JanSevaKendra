@@ -129,40 +129,40 @@ fun SplashScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            // Hindi branding from official logo
+            // Main English branding
             Text(
-                text = "उद्यम जन सेवा केंद्र",
+                text = "UDYAM JAN SEWA KENDRA",
                 style = MaterialTheme.typography.displayMedium.copy(
-                    fontSize = 30.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp,
                     color = JskColors.SaffronPrimary
                 )
             )
 
             Spacer(Modifier.height(6.dp))
 
-            // English branding from official logo
+            // Digital Portal Subtitle
             Text(
-                text = "UDYAM JAN SEWA KENDRA",
+                text = "Citizen Public Services Portal",
                 style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 2.sp,
+                    fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.secondary
                 )
             )
 
             Spacer(Modifier.height(10.dp))
 
-            // Official Motto from logo
+            // Official Motto in English
             Text(
-                text = "जन कल्याण हमारी पहचान",
+                text = "Citizen Welfare Is Our Identity",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.SemiBold,
                     color = JskColors.ForestGreen
                 )
             )
             Text(
-                text = "Government to Citizen Digital Portal",
+                text = "Fast • Transparent • 100% Digital",
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

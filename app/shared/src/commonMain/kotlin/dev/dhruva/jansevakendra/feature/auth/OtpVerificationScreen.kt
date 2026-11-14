@@ -97,7 +97,7 @@ fun OtpVerificationScreen(
                 }
                 Spacer(Modifier.width(16.dp))
                 Text(
-                    text = "Verification (सत्यापन)",
+                    text = "Verification",
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -230,7 +230,7 @@ fun OtpVerificationScreen(
                 if (uiState.canResendOtp) {
                     TextButton(onClick = viewModel::resendOtp) {
                         Text(
-                            text = "Resend OTP (ओटीपी पुनः भेजें)",
+                            text = "Resend OTP",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = JskColors.SaffronPrimary
@@ -251,7 +251,7 @@ fun OtpVerificationScreen(
 
             // Verify button
             JskPrimaryButton(
-                text = "Verify & Proceed (पुष्टि करें)",
+                text = "Verify & Proceed",
                 onClick = viewModel::verifyOtp,
                 isLoading = uiState.isLoading,
                 enabled = uiState.otp.length == 6,

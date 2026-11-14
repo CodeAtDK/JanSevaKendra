@@ -1231,7 +1231,7 @@ class FakeAuthRepository : AuthRepository {
             name = "Dhruva Rajendra Khatavkar",
             mobileNumber = mobileNumber,
             email = "dhruva.khatavkar@example.com",
-            language = AppLanguage.HINDI,
+            language = AppLanguage.ENGLISH,
             district = "Beed",
             state = "Maharashtra",
             isVerified = true,
@@ -1248,7 +1248,7 @@ class FakeAuthRepository : AuthRepository {
 
 class InMemoryUserSessionRepository : UserSessionRepository {
     private val profileState = MutableStateFlow<CitizenProfile?>(null)
-    private val languageState = MutableStateFlow(AppLanguage.HINDI)
+    private val languageState = MutableStateFlow(AppLanguage.ENGLISH)
     private val onboardingCompletedState = MutableStateFlow(false)
 
     override fun observeCurrentProfile(): Flow<CitizenProfile?> = profileState.asStateFlow()

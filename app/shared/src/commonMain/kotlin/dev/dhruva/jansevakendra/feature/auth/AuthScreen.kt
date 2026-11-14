@@ -72,15 +72,15 @@ fun AuthScreen(
                 Spacer(Modifier.width(14.dp))
                 Column {
                     Text(
-                        text = "नागरिक लॉगिन",
+                        text = "Citizen Login",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = JskColors.SaffronPrimary
                         )
                     )
                     Text(
-                        text = "Citizen Mobile Login",
-                        style = MaterialTheme.typography.titleMedium.copy(
+                        text = "Mobile Authentication",
+                        style = MaterialTheme.typography.titleSmall.copy(
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.secondary
                         )
@@ -108,7 +108,7 @@ fun AuthScreen(
                 JskTextField(
                     value = uiState.mobileNumber,
                     onValueChange = viewModel::onMobileNumberChanged,
-                    label = "Mobile Number (मोबाइल नंबर)",
+                    label = "Mobile Number",
                     placeholder = "98765 43210",
                     isError = uiState.errorMessage != null,
                     errorMessage = uiState.errorMessage,
@@ -163,7 +163,7 @@ fun AuthScreen(
 
             // Action Button
             JskPrimaryButton(
-                text = "Get OTP (ओटीपी प्राप्त करें)",
+                text = "Get OTP",
                 onClick = viewModel::requestOtp,
                 isLoading = uiState.isLoading,
                 enabled = uiState.mobileNumber.length == 10,

@@ -8,9 +8,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
@@ -28,7 +25,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -115,7 +111,6 @@ fun HomeScreen(
                                 HomeSchemesTabContent(
                                     schemes = uiState.featuredSchemes,
                                     onApplyScheme = { scheme ->
-                                        // Open dialog for scheme application
                                         val mockService = CitizenService(
                                             id = scheme.id,
                                             title = scheme.title,
@@ -222,7 +217,7 @@ private fun HomeHeaderSection(
                     Text(text = "🌐", fontSize = 12.sp)
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        text = language.nativeName,
+                        text = language.displayName,
                         style = MaterialTheme.typography.labelMedium.copy(
                             fontWeight = FontWeight.SemiBold,
                             color = JskColors.SaffronPrimary
@@ -292,7 +287,7 @@ private fun HomeDashboardContent(
             }
         }
 
-        // 28 Core Departments Gateway Banner (Prominently directs user to the new Services section!)
+        // 28 Core Departments Gateway Banner (Prominently directs user to the Services section)
         item {
             Box(
                 modifier = Modifier
@@ -325,7 +320,7 @@ private fun HomeDashboardContent(
                                 .padding(horizontal = 10.dp, vertical = 4.dp)
                         ) {
                             Text(
-                                text = "28 DEPARTMENTS • सभी २८ विभाग",
+                                text = "28 DEPARTMENTS • ALL OFFICIAL SERVICES",
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = Color.White,
@@ -346,7 +341,7 @@ private fun HomeDashboardContent(
                     Spacer(Modifier.height(12.dp))
 
                     Text(
-                        text = "नागरिक सेवा केंद्र निर्देशिका",
+                        text = "Citizen Services Directory",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color.White
@@ -356,7 +351,7 @@ private fun HomeDashboardContent(
                     Spacer(Modifier.height(4.dp))
 
                     Text(
-                        text = "Transport RTO (Licences), Revenue, Aadhaar, PAN, Agriculture, Ration, Pensions, Electricity & 20+ more departments.",
+                        text = "Transport RTO (Licences), Revenue & Land, Aadhaar, PAN, Agriculture, Ration, Pensions, Electricity & 20+ more departments.",
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = Color.White.copy(alpha = 0.85f),
                             lineHeight = 18.sp
@@ -375,7 +370,7 @@ private fun HomeDashboardContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Top Citizen Departments (प्रमुख विभाग)",
+                        text = "Top Citizen Departments",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -384,7 +379,7 @@ private fun HomeDashboardContent(
 
                     TextButton(onClick = { onOpenServices(null) }) {
                         Text(
-                            text = "View 28 All →",
+                            text = "View All 28 →",
                             style = MaterialTheme.typography.labelMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = JskColors.SaffronPrimary
@@ -419,7 +414,7 @@ private fun HomeDashboardContent(
         // Section Title: Popular Services
         item {
             Text(
-                text = "Popular Citizen Services (लोकप्रिय सेवाएं)",
+                text = "Popular Citizen Services",
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -454,18 +449,18 @@ private fun AllServicesDirectoryContent(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
-        // Sticky Header Title
+        // Header Title
         item {
             Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)) {
                 Text(
-                    text = "नागरिक सेवाएं (All 28 Departments)",
+                    text = "Citizen Services Directory",
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 )
                 Text(
-                    text = "Complete catalog of 28 Government Departments and sub-services.",
+                    text = "Complete catalog of all 28 Government Departments and sub-services.",
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -520,7 +515,7 @@ private fun AllServicesDirectoryContent(
                 }
                 items(uiState.categories) { cat ->
                     CategoryPill(
-                        title = "#${cat.departmentNumber.toString().padStart(2, '0')} ${cat.nameHindi}",
+                        title = "#${cat.departmentNumber.toString().padStart(2, '0')} ${cat.name}",
                         count = cat.serviceCount,
                         isSelected = uiState.selectedCategoryId == cat.id,
                         onClick = { onCategorySelect(cat.id) }
@@ -607,17 +602,19 @@ private fun DepartmentAccordionCard(
 
                     Column {
                         Text(
-                            text = category.nameHindi,
+                            text = category.name,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         )
                         Text(
-                            text = category.name,
+                            text = category.description,
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                            ),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
@@ -630,7 +627,7 @@ private fun DepartmentAccordionCard(
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
-                            text = "${category.serviceCount} सेवाएं",
+                            text = "${category.serviceCount} Services",
                             style = MaterialTheme.typography.labelSmall.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -705,10 +702,10 @@ private fun SubServiceItemCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = service.titleHindi,
+                            text = service.title,
                             style = MaterialTheme.typography.titleSmall.copy(
                                 fontWeight = FontWeight.Bold,
-                                color = JskColors.SaffronPrimary
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         )
                         service.formNumber?.let { form ->
@@ -732,10 +729,10 @@ private fun SubServiceItemCard(
                     }
 
                     Text(
-                        text = service.title,
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
+                        text = service.departmentName ?: "Citizen Public Service",
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontWeight = FontWeight.Medium,
+                            color = JskColors.SaffronPrimary
                         )
                     )
                 }
@@ -785,7 +782,7 @@ private fun SubServiceItemCard(
                     )
                     Spacer(Modifier.width(10.dp))
                     Text(
-                        text = "📄 ${service.requiredDocuments.size} Docs",
+                        text = "📄 ${service.requiredDocuments.size} Docs required",
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -844,7 +841,7 @@ private fun ServiceApplicationDialog(
                         Spacer(Modifier.height(16.dp))
 
                         Text(
-                            text = "आवेदन सफलतापूर्वक दर्ज हुआ!",
+                            text = "Application Submitted Successfully!",
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -870,7 +867,7 @@ private fun ServiceApplicationDialog(
                         Spacer(Modifier.height(12.dp))
 
                         Text(
-                            text = "Visit Udyam Jan Sewa Kendra or track status in 'आवेदन' tab.",
+                            text = "Please visit Udyam Jan Sewa Kendra or track live status in the 'Tracking' tab.",
                             style = MaterialTheme.typography.bodySmall.copy(
                                 textAlign = TextAlign.Center,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -880,7 +877,7 @@ private fun ServiceApplicationDialog(
                         Spacer(Modifier.height(20.dp))
 
                         JskPrimaryButton(
-                            text = "Done (पूर्ण)",
+                            text = "Done",
                             onClick = onDismiss
                         )
                     }
@@ -914,16 +911,18 @@ private fun ServiceApplicationDialog(
                     Spacer(Modifier.height(10.dp))
 
                     Text(
-                        text = service.titleHindi,
+                        text = service.title,
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     )
 
+                    Spacer(Modifier.height(4.dp))
+
                     Text(
-                        text = service.title,
-                        style = MaterialTheme.typography.bodyMedium.copy(
+                        text = service.description,
+                        style = MaterialTheme.typography.bodySmall.copy(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
@@ -961,7 +960,7 @@ private fun ServiceApplicationDialog(
                     Spacer(Modifier.height(14.dp))
 
                     Text(
-                        text = "आवश्यक दस्तावेज (Required Documents):",
+                        text = "Required Documents:",
                         style = MaterialTheme.typography.labelMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -987,7 +986,7 @@ private fun ServiceApplicationDialog(
                     Spacer(Modifier.height(20.dp))
 
                     JskPrimaryButton(
-                        text = "Apply Now (आवेदन करें)",
+                        text = "Apply Now",
                         onClick = onConfirm
                     )
                 }
@@ -1036,7 +1035,7 @@ private fun QuickDepartmentBadge(
             Spacer(Modifier.height(6.dp))
 
             Text(
-                text = category.nameHindi.split(" ").firstOrNull() ?: category.name,
+                text = category.name.split(" ").firstOrNull() ?: category.name,
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -1135,7 +1134,7 @@ private fun ActiveApplicationTrackerCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val stages = listOf("Submitted", "Verification", "Field Check", "Approved")
-                stages.forEachIndexed { i, title ->
+                stages.forEachIndexed { i, _ ->
                     val isDone = when (application.currentStage) {
                         ApplicationStage.SUBMITTED -> i == 0
                         ApplicationStage.DOCUMENTS_VERIFYING -> i <= 1
@@ -1170,7 +1169,7 @@ private fun ActiveApplicationTrackerCard(
                     style = MaterialTheme.typography.labelSmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
                 )
                 Text(
-                    text = "Est: ${application.estimatedCompletionDate}",
+                    text = "Est. Completion: ${application.estimatedCompletionDate}",
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.SemiBold,
                         color = JskColors.ForestGreen
@@ -1284,10 +1283,10 @@ private fun ModernServiceCard(
                     Column(modifier = Modifier.weight(1f)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = service.titleHindi,
+                                text = service.title,
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
-                                    color = JskColors.SaffronPrimary
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             )
                             service.formNumber?.let { form ->
@@ -1311,10 +1310,10 @@ private fun ModernServiceCard(
                         }
 
                         Text(
-                            text = service.title,
-                            style = MaterialTheme.typography.bodyMedium.copy(
+                            text = service.departmentName ?: "Jan Seva Kendra",
+                            style = MaterialTheme.typography.bodySmall.copy(
                                 fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = JskColors.SaffronPrimary
                             )
                         )
                     }
@@ -1402,14 +1401,14 @@ private fun HomeApplicationsTabContent(
         item {
             Column {
                 Text(
-                    text = "आवेदन स्थिति ट्रैकिंग (Application Status)",
+                    text = "Application Status Tracking",
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 )
                 Text(
-                    text = "Check the live progress of your government applications.",
+                    text = "Check real-time progress and download official digital certificates.",
                     style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             }
@@ -1464,14 +1463,14 @@ private fun HomeSchemesTabContent(
         item {
             Column {
                 Text(
-                    text = "कल्याणकारी योजनाएं (Government Welfare Schemes)",
+                    text = "Government Welfare Schemes",
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 )
                 Text(
-                    text = "Direct Benefit Transfer (DBT) and subsidy schemes for citizens.",
+                    text = "Direct Benefit Transfer (DBT) and subsidy programs for citizens.",
                     style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             }
@@ -1526,16 +1525,19 @@ private fun HomeSchemesTabContent(
                     Spacer(Modifier.height(10.dp))
 
                     Text(
-                        text = scheme.titleHindi,
+                        text = scheme.title,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
                     )
+
+                    Spacer(Modifier.height(4.dp))
+
                     Text(
-                        text = scheme.title,
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            color = Color.White.copy(alpha = 0.9f)
+                        text = scheme.department,
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = Color.White.copy(alpha = 0.85f)
                         )
                     )
 
@@ -1657,11 +1659,11 @@ private fun HomeProfileTabContent(
                     Spacer(Modifier.width(10.dp))
                     Column {
                         Text(
-                            text = "Udyam Jan Sewa Kendra (उद्यम जन सेवा केंद्र)",
+                            text = "Udyam Jan Sewa Kendra",
                             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold, color = JskColors.NavyPrimary)
                         )
                         Text(
-                            text = "जन कल्याण हमारी पहचान • Center ID: CSC-MH23-8821",
+                            text = "Citizen Welfare Is Our Identity • Center ID: CSC-MH23-8821",
                             style = MaterialTheme.typography.labelSmall.copy(color = JskColors.SaffronPrimary, fontWeight = FontWeight.SemiBold)
                         )
                     }
@@ -1680,14 +1682,14 @@ private fun HomeProfileTabContent(
 
         // Actions
         JskSecondaryButton(
-            text = "Change App Language (भाषा बदलें: ${language.nativeName})",
+            text = "Change App Language (${language.displayName})",
             onClick = onChangeLanguage
         )
 
         Spacer(Modifier.height(10.dp))
 
         JskSecondaryButton(
-            text = "Log Out (लॉग आउट)",
+            text = "Log Out",
             onClick = onLogout
         )
     }
@@ -1880,7 +1882,7 @@ private fun HomeBottomNavigationBar(
                             )
                             Spacer(Modifier.height(3.dp))
                             Text(
-                                text = tab.titleHindi,
+                                text = tab.titleEnglish,
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                                     color = tabTint,

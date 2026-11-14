@@ -117,7 +117,7 @@ fun OnboardingScreen() {
                     onClick = { completeOnboarding() }
                 ) {
                     Text(
-                        text = "Skip (छोड़ें)",
+                        text = "Skip",
                         style = MaterialTheme.typography.labelLarge.copy(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -186,21 +186,10 @@ fun OnboardingScreen() {
                     Spacer(Modifier.height(32.dp))
 
                     Text(
-                        text = current.titleHindi,
+                        text = current.titleEnglish,
                         style = MaterialTheme.typography.headlineLarge.copy(
                             fontWeight = FontWeight.Bold,
                             color = current.accentColor
-                        ),
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(Modifier.height(6.dp))
-
-                    Text(
-                        text = current.titleEnglish,
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
                         ),
                         textAlign = TextAlign.Center
                     )
@@ -253,7 +242,7 @@ fun OnboardingScreen() {
 
             // Next / Get Started Action Button
             JskPrimaryButton(
-                text = if (currentStepIndex == steps.lastIndex) "Get Started (शुरू करें)" else "Next (आगे)",
+                text = if (currentStepIndex == steps.lastIndex) "Get Started" else "Next",
                 onClick = {
                     if (currentStepIndex < steps.lastIndex) {
                         currentStepIndex++

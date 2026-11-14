@@ -10,16 +10,18 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 enum class HomeTab(val titleHindi: String, val titleEnglish: String, val iconKey: String) {
-    HOME("होम", "Home", "home"),
-    SERVICES("सेवाएं", "Services", "grid"),
-    APPLICATIONS("आवेदन", "Tracking", "track"),
-    SCHEMES("योजनाएं", "Schemes", "award"),
-    PROFILE("प्रोफ़ाइल", "Profile", "user")
+    HOME("Home", "Home", "home"),
+    SERVICES("Services", "Services", "grid"),
+    APPLICATIONS("Tracking", "Tracking", "track"),
+    SCHEMES("Schemes", "Schemes", "award"),
+    PROFILE("Profile", "Profile", "user");
+
+    val title: String get() = titleEnglish
 }
 
 data class HomeUiState(
     val profile: CitizenProfile? = null,
-    val selectedLanguage: AppLanguage = AppLanguage.HINDI,
+    val selectedLanguage: AppLanguage = AppLanguage.ENGLISH,
     val selectedTab: HomeTab = HomeTab.HOME,
     val categories: List<ServiceCategory> = emptyList(),
     val selectedCategoryId: String? = null,
@@ -191,7 +193,7 @@ class HomeViewModel(
             val randomNum = (1000000000L..9999999999L).random()
             val newAppId = "JSK-2026-$randomNum"
             _uiState.update { it.copy(submittedApplicationId = newAppId) }
-            _events.emit(HomeNavigationEvent.ShowToast("आवेदन सफलतापूर्वक दर्ज किया गया! Application No: $newAppId"))
+            _events.emit(HomeNavigationEvent.ShowToast("Application submitted successfully! Application No: $newAppId"))
         }
     }
 
